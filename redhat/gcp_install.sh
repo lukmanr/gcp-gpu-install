@@ -77,7 +77,7 @@ fi
 
 # OPTIONAL: install cudnn 5.1 (requires login to NVidia developer, download of cudnn-8.0-linux-x64-v5.1.tgz)
 tar xzf cudnn-8.0-linux-x64-v5.1.tgz
-sudo cp cuda/lib64/* /usr/lib/x86_64-linux-gnu/
+sudo cp cuda/lib64/* /usr/lib64
 
 # create and activate conda environment, named 'tf' in this example
 conda create -y -n tf
