@@ -2,7 +2,7 @@
 
 echo "Checking for CUDA and installing."
 
-RH_VERSION=$(lsb_release -rs | cut -f1 -d.)
+RH_VERSION=`rpm -qa \*-release | grep -Ei "oracle|redhat|centos" | cut -d"-" -f3`
 
 if [[ $RH_VERSION == "6" ]] ; then
 

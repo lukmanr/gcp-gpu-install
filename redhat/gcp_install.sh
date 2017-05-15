@@ -5,14 +5,22 @@
 # usage:  gcp-install.sh [--gpu]
 #
 
-RH_VERSION=$(lsb_release -rs | cut -f1 -d.)
+RH_VERSION=`rpm -qa \*-release | grep -Ei "oracle|redhat|centos" | cut -d"-" -f3`
 
 # update system packages
 sudo yum update 
 sudo yum -y upgrade 
 
 # install pip, devel tools, and git
-sudo yum install -y python-pip python-dev git
+sudo yum install -y python-pip python-devel
+
+# install miniconda (gives us python 2.7 on el6)
+wget https://repo.continuum.io/miniconda/Miniconda2-latest-Linux-x86_64.sh
+bash Miniconda2-latest-Linux-x86_64.sh -b
+export PATH=~/miniconda2/bin:$PATH
+cat >> ~/.bashrc <<EOL
+export PATH=~/miniconda2/bin:$PATH
+EOL
 
 #
 # update gcloud sdk:  see https://cloud.google.com/sdk/docs/quickstart-redhat-centos
@@ -20,11 +28,17 @@ sudo yum install -y python-pip python-dev git
 
 if [[ $RH_VERSION == "6" ]] ; then
 
+# note: (interactive)
 pushd ~  
 wget https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-sdk-155.0.0-linux-x86_64.tar.gz
 tar xzf google-cloud-sdk-155.0.0-linux-x86_64.tar.gz
 ./google-cloud-sdk/install.sh
 popd
+
+# install git (need git > 2.0.1)
+sudo yum install -y http://opensource.wandisco.com/centos/6/git/x86_64/wandisco-git-release-6-1.noarch.rpm
+sudo yum install -y git
+
 
 elif [[ $RH_VERSION == "7" ]] ; then
   
@@ -42,23 +56,19 @@ EOM
 # Install the Cloud SDK
 yum -y install google-cloud-sdk
 
+# install git
+yum -y install git
+
 fi
 
 
-# gcloud sdk config
-# pick the default service account, and the project "geocrawler-158117".  
+# gcloud sdk config (interactive)
+# pick the default service account  
 gcloud init
 
 # download source code repo from project
 gcloud source repos clone <project_repo> --project=<project_id>
 
-# install miniconda
-wget https://repo.continuum.io/miniconda/Miniconda2-latest-Linux-x86_64.sh
-bash Miniconda2-latest-Linux-x86_64.sh -b
-export PATH=~/miniconda2/bin:$PATH
-cat >> ~/.bashrc <<EOL
-export PATH=~/miniconda2/bin:$PATH
-EOL
 
 # install cuda 8 (GPU ONLY)
 if [[ $# > 0 && $1 == "--gpu" ]] ; then
