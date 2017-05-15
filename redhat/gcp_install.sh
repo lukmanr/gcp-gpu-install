@@ -62,7 +62,7 @@ EOL
 
 # install cuda 8 (GPU ONLY)
 if [[ $# > 0 && $1 == "--gpu" ]] ; then
-  sudo bash geocrawler/cuda_install.sh
+  sudo bash cuda_install.sh
 fi
 
 # OPTIONAL: install cudnn 5.1 (requires login to NVidia developer, download of cudnn-8.0-linux-x64-v5.1.tgz)
