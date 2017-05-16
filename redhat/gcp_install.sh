@@ -8,11 +8,11 @@
 RH_VERSION=`rpm -qa \*-release | grep -Ei "oracle|redhat|centos" | cut -d"-" -f3`
 
 # update system packages
-sudo yum update 
+sudo yum -y update 
 sudo yum -y upgrade 
 
 # install pip, devel tools, and git
-sudo yum install -y python-pip python-devel
+sudo yum install -y bzip2 wget python-pip python-devel
 
 # install miniconda (gives us python 2.7 on el6)
 wget https://repo.continuum.io/miniconda/Miniconda2-latest-Linux-x86_64.sh
@@ -54,10 +54,12 @@ gpgkey=https://packages.cloud.google.com/yum/doc/yum-key.gpg
 EOM
 
 # Install the Cloud SDK
-yum -y install google-cloud-sdk
+sudo yum -y install google-cloud-sdk
 
-# install git
-yum -y install git
+# install git (need git > 2.0.1)
+sudo yum install -y http://opensource.wandisco.com/centos/7/git/x86_64/wandisco-git-release-7-1.noarch.rpm
+sudo yum install -y git
+
 
 fi
 
@@ -75,7 +77,7 @@ if [[ $# > 0 && $1 == "--gpu" ]] ; then
   sudo bash cuda_install.sh
 fi
 
-# OPTIONAL: install cudnn 5.1 (requires login to NVidia developer, download of cudnn-8.0-linux-x64-v5.1.tgz)
+# install cudnn 5.1 (requires login to NVidia developer, download of cudnn-8.0-linux-x64-v5.1.tgz)
 tar xzf cudnn-8.0-linux-x64-v5.1.tgz
 sudo cp cuda/lib64/* /usr/lib64
 
