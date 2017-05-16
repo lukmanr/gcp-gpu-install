@@ -4,7 +4,7 @@
 #
 # This is designed to run on Ubuntu 16.04.  Should work on 16.10.
 #
-# usage:  gcp-install.sh [--gpu]
+# usage:  tf_install.sh [--gpu]
 #
 
 
@@ -14,6 +14,10 @@ sudo apt-get -y upgrade
 
 # install pip, devel tools, and git
 sudo apt-get install -y python-pip python-dev git
+
+#
+#  GCP ONLY:  BEGIN
+#
 
 #
 # update gcloud sdk:  see https://cloud.google.com/sdk/docs/quickstart-debian-ubuntu
@@ -33,14 +37,18 @@ sudo apt-get update && sudo apt-get -y install google-cloud-sdk
 
 
 # gcloud sdk config
-# pick the default service account, and the project "geocrawler-158117".  
+# pick the default service account
 gcloud init
 
-# download geocrawler repo
-gcloud source repos clone geocrawler --project=geocrawler-158117
+# download repo
+gcloud source repos clone <repo> --project=<project>
+
+#
+#  GCP ONLY:  END
+#
 
 # load git submodules
-pushd geocrawler
+pushd <repo>
 git submodule update --init --recursive
 popd
 
@@ -54,7 +62,7 @@ EOL
 
 # install cuda 8 (GPU ONLY)
 if [[ $# > 0 && $1 == "--gpu" ]] ; then
-  sudo bash geocrawler/cuda_install.sh
+  sudo bash cuda_install.sh
 fi
 
 # OPTIONAL: install cudnn 5.1 (requires login to NVidia developer, download of cudnn-8.0-linux-x64-v5.1.tgz)
@@ -62,11 +70,11 @@ tar xzf cudnn-8.0-linux-x64-v5.1.tgz
 sudo cp cuda/lib64/* /usr/lib/x86_64-linux-gnu/
 
 # create and activate conda environment
-conda create -y -n geo
-source activate geo
+conda create -y -n tf
+source activate tf
 
 # install packages
-conda install -y --file geocrawler/requirements.txt
+conda install -y --file <repo>/requirements.txt
 
 if [[ $# > 0 && $1 == "--gpu" ]] ; then
   pip install tensorflow==1.0.1
@@ -78,12 +86,20 @@ fi
 pip install ipdb
 pip install -U crcmod
 
+#
+#  GCP ONLY:  BEGIN
+#
+
 # install google-compute-engine package (needed for gsutil)
 pip install google_compute_engine
 
-# download vgg weights file
-mkdir geocrawler/DATA
-gsutil cp gs://geocrawler-158117-mlengine/vgg16.npy geocrawler/DATA/vgg16.npy
+# download data file
+mkdir <repo>/data
+gsutil cp gs://<data path> <repo>/data
+
+#
+#  GCP ONLY:  END
+#
 
 # GPU: useful test that everything installed okay
 if [[ $# > 0 && $1 == "--gpu" ]] ; then

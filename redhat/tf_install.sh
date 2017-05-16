@@ -4,8 +4,7 @@
 #
 # This is designed to run on RedHat / Centos 6.x or 7.x
 #
-# usage:  gcp-install.sh [--gpu]
-#
+# 
 
 RH_VERSION=`rpm -qa \*-release | grep -Ei "oracle|redhat|centos" | cut -d"-" -f3`
 
@@ -24,6 +23,11 @@ cat >> ~/.bashrc <<EOL
 export PATH=~/miniconda2/bin:$PATH
 EOL
 
+
+#
+#  GCP ONLY:  BEGIN
+#
+  
 #
 # update gcloud sdk:  see https://cloud.google.com/sdk/docs/quickstart-redhat-centos
 #
@@ -62,9 +66,7 @@ sudo yum -y install google-cloud-sdk
 sudo yum install -y http://opensource.wandisco.com/centos/7/git/x86_64/wandisco-git-release-7-1.noarch.rpm
 sudo yum install -y git
 
-
 fi
-
 
 # gcloud sdk config (interactive)
 # pick the default service account  
@@ -72,6 +74,10 @@ gcloud init
 
 # download source code repo from project
 gcloud source repos clone <project_repo> --project=<project_id>
+
+#
+#  GCP ONLY:  END
+#
 
 
 # install cuda 8 (GPU ONLY)
@@ -100,12 +106,20 @@ fi
 pip install ipdb
 pip install -U crcmod
 
+#
+#  GCP ONLY:  BEGIN
+#
+
 # install google-compute-engine package (needed for gsutil)
 pip install google_compute_engine
 
 # download data from GS bucket
 mkdir data
 gsutil cp gs://<bucket>/<file> data/<file>
+
+#
+#  GCP ONLY:  END
+#
 
 # GPU: useful test that everything installed okay
 if [[ $# > 0 && $1 == "--gpu" ]] ; then
