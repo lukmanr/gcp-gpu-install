@@ -11,7 +11,7 @@ RH_VERSION=`rpm -qa \*-release | grep -Ei "oracle|redhat|centos" | cut -d"-" -f3
 sudo yum -y update 
 sudo yum -y upgrade 
 
-# install pip, devel tools, and git
+# install utils, pip, devel tools
 sudo yum install -y bzip2 wget python-pip python-devel
 
 # install miniconda (gives us python 2.7 on el6)
