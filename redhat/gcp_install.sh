@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# Install Tensorflow environment (optionally w/ GPU support)
+#
 # This is designed to run on RedHat / Centos 6.x or 7.x
 #
 # usage:  gcp-install.sh [--gpu]

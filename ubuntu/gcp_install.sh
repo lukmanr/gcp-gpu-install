@@ -1,6 +1,8 @@
 #!/bin/bash
 
-# This is designed to run on Ubuntu 16.04.  It would probably work on 16.10.
+# Install Tensorflow environment (optionally w/ GPU support)
+#
+# This is designed to run on Ubuntu 16.04.  Should work on 16.10.
 #
 # usage:  gcp-install.sh [--gpu]
 #
