@@ -9,8 +9,8 @@
 
 
 # update system packages
-sudo apt-get update 
-sudo apt-get -y upgrade 
+sudo apt-get update
+sudo apt-get -y upgrade
 
 # install pip, devel tools, and git
 sudo apt-get install -y python-pip python-dev git
@@ -65,8 +65,12 @@ if [[ $# > 0 && $1 == "--gpu" ]] ; then
   sudo bash cuda_install.sh
 fi
 
-# OPTIONAL: install cudnn 5.1 (requires login to NVidia developer, download of cudnn-8.0-linux-x64-v5.1.tgz)
+# Tensorflow <= 1.3:  install cudnn 5.1 (requires login to NVidia developer, download of cudnn-8.0-linux-x64-v5.1.tgz)
 tar xzf cudnn-8.0-linux-x64-v5.1.tgz
+
+# Tensorflow == 1.4:  install cudnn 6 (requires login to NVidia developer, download of cudnn-8.0-linux-x64-v6.0.tgz)
+tar xzf cudnn-8.0-linux-x64-v6.0.tgz
+
 sudo cp cuda/lib64/* /usr/lib/x86_64-linux-gnu/
 
 # create and activate conda environment
@@ -77,9 +81,9 @@ source activate tf
 conda install -y --file <repo>/requirements.txt
 
 if [[ $# > 0 && $1 == "--gpu" ]] ; then
-  pip install tensorflow==1.0.1
+  pip install tensorflow==1.4.1
 else
-  pip install tensorflow-gpu==1.0.1
+  pip install tensorflow-gpu==1.4.1
 fi
 
 # install packages with pip that we can't install via conda
